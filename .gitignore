@@ -1,0 +1,5 @@
+# ignore virtualenv
+topPlaylist/
+
+# Ignore caches
+.spotifyoauthcache

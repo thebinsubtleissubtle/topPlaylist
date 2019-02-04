@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>TopPlaylist | Most Played</title>
+	<link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+	<div class="container">
+		<form action="/most_played" method = "post">
+			<select name="type" id="">
+				<option value="">Select type</option>
+				<option value="artist">Artist</option>
+				<option value="track">Track</option>
+			</select>
+			<select name="term" id="">
+				<option value="">Select Term</option>
+				<option value="short term">Short Term</option>
+				<option value="medium term">Medium Term</option>
+				<option value="long term">Long Term</option>
+			</select>
+			<select name="displayNumber" id="">
+				<option value="">Select number</option>
+				<option value="10">10</option>
+				<option value="20">20</option>
+				<option value="50">50</option>
+				<option value="100">100</option>
+			</select>
+			<input type="submit" value="Search">
+		</form>
+		<h1>SHORT TERM</h1>
+		<table>
+			<thead>
+				<th>#</th>
+				<th>Artist Name</th>
+			</thead>
+			<tbody>
+				%for i, artist in enumerate(short_term_artists):
+				<tr>
+					<td>{{i + 1}}</td>
+					<td>
+						%if len(artist["images"]) > 0:
+							<img src="{{artist['images'][0]['url']}}" alt="{{artist['name']}}" width = "100" height = "100">
+						%else:
+							<img src="static/img/person-placeholder.jpg" alt="{{artist['name']}}" width = "100" height = "100">
+						%end
+						{{artist["name"]}}
+					</td>
+				</tr>
+				%end
+			</tbody>
+		</table>
+		<table>
+			<thead>
+				<th>#</th>
+				<th>Track Name</th>
+				<th>Artist</th>
+				<th>Album</th>
+			</thead>
+			<tbody>
+				%for i, track in enumerate(short_term_tracks):
+				<tr>
+					<td>{{i + 1}}</td>
+					<td>{{track["name"]}}</td>
+					<td>
+						<ul>
+						%for i, artists_name in enumerate(track["artists"]):
+							<li>
+								<a href="{{track['artists'][i]['external_urls']['spotify']}}" target="_blank">
+									{{track["artists"][i]["name"]}}
+								</a>
+							</li>
+						%end
+						</ul>
+					</td>
+					<td>
+						%if len(track["album"]["images"]) > 0:
+							<img src="{{track['album']['images'][0]['url']}}" alt="{{track['album']['name']}}" width = "100" height = "100">
+						%end
+						{{track["album"]["name"]}}
+					</td>
+				</tr>
+				%end
+			</tbody>
+		</table>
+		<h1>MEDIUM TERM</h1>
+		<table>
+			<thead>
+				<th>#</th>
+				<th>Artist Name</th>
+			</thead>
+			<tbody>
+				%for i, artist in enumerate(medium_term_artists):
+				<tr>
+					<td>{{i + 1}}</td>
+					<td>
+						%if len(artist["images"]) > 0:
+							<img src="{{artist['images'][0]['url']}}" alt="{{artist['name']}}" width = "100" height = "100">
+						%else:
+							<img src="static/img/person-placeholder.jpg" alt="{{artist['name']}}" width = "100" height = "100">
+						%end
+						{{artist["name"]}}
+					</td>
+				</tr>
+				%end
+			</tbody>
+		</table>
+		<table>
+			<thead>
+				<th>#</th>
+				<th>Track Name</th>
+				<th>Artist</th>
+				<th>Album</th>
+			</thead>
+			<tbody>
+				%for i, track in enumerate(medium_term_tracks):
+				<tr>
+					<td>{{i + 1}}</td>
+					<td>{{track["name"]}}</td>
+					<td>
+						<ul>
+						%for i, artists_name in enumerate(track["artists"]):
+							<li>
+								<a href="{{track['artists'][i]['external_urls']['spotify']}}" target="_blank">
+									{{track["artists"][i]["name"]}}
+								</a>
+							</li>
+						%end
+						</ul>
+					</td>
+					<td>
+						%if len(track["album"]["images"]) > 0:
+							<img src="{{track['album']['images'][0]['url']}}" alt="{{track['album']['name']}}" width = "100" height = "100">
+						%end
+						{{track["album"]["name"]}}
+					</td>
+				</tr>
+				%end
+			</tbody>
+		</table>
+		<h1>LONG TERM</h1>
+		<table>
+			<thead>
+				<th>#</th>
+				<th>Artist Name</th>
+			</thead>
+			<tbody>
+				%for i, artist in enumerate(long_term_artists):
+				<tr>
+					<td>{{i + 1}}</td>
+					<td>
+						%if len(artist["images"]) > 0:
+							<img src="{{artist['images'][0]['url']}}" alt="{{artist['name']}}" width = "100" height = "100">
+						%else:
+							<img src="static/img/person-placeholder.jpg" alt="{{artist['name']}}" width = "100" height = "100">
+						%end
+						{{artist["name"]}}
+					</td>
+				</tr>
+				%end
+			</tbody>
+		</table>
+		<table>
+			<thead>
+				<th>#</th>
+				<th>Track Name</th>
+				<th>Artist</th>
+				<th>Album</th>
+			</thead>
+			<tbody>
+				%for i, track in enumerate(long_term_tracks):
+				<tr>
+					<td>{{i + 1}}</td>
+					<td>{{track["name"]}}</td>
+					<td>
+						<ul>
+						%for i, artists_name in enumerate(track["artists"]):
+							<li>
+								<a href="{{track['artists'][i]['external_urls']['spotify']}}" target="_blank">
+									{{track["artists"][i]["name"]}}
+								</a>
+							</li>
+						%end
+						</ul>
+					</td>
+					<td>
+						%if len(track["album"]["images"]) > 0:
+							<img src="{{track['album']['images'][0]['url']}}" alt="{{track['album']['name']}}" width = "100" height = "100">
+						%end
+						{{track["album"]["name"]}}
+					</td>
+				</tr>
+				%end
+			</tbody>
+		</table>
+	</div>
+	<footer>
+		<p>&copy; {{year}} RC Pery.</p>
+	</footer>
+	<script type = "text/javascript"></script>
+	<script type = "text/javascript">
+		
+	</script>
+</body>
+</html>
