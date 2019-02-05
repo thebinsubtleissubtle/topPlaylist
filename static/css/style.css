@@ -1,8 +1,9 @@
 body{
+	height: 100%;
 	background-color: #f4f4f4;
 	font-weight: 18px;
 	font-family: Verdana;
-	line-height: 1.6em;
+	line-height: 1.8em;
 	margin: 0;
 }
 
@@ -14,8 +15,10 @@ body{
 	overflow: hidden;
 }
 
+/* header */
+
 #main-header{
-	background: #1ed760;
+	background: #0099e6;
 	padding: 10px;
 	color: #fff;
 }
@@ -48,8 +51,100 @@ body{
 	text-decoration:underline;
 }
 
+/* showcase */
+
 #showcase{
 	text-align:center;
+}
+
+#showcase #landing{
+	position: relative;
+	top: 50%;
+	width: 100%;
+	padding:250px 0 35% 0;
+	font-size: 28px;
+	background: url("../img/bg-5.jpeg");
+	background-repeat: no-repeat;
+	background-attachment:fixed;
+	opacity: 0.75;
+}
+
+#showcase #landing #landing-text{
+	border: 3px solid blue;
+	padding-bottom: 20px;
+}
+
+#showcase #landing form{
+	padding-bottom: 40px;
+	width: 100%;
+	right: 200px;
+}
+
+#showcase #landing #search-area{
+	border: 3px solid #fff;
+	background: transparent;
+	border-radius: 40px;
+	color: #fff;
+	padding: 10px;
+	width: 70%;
+	font-size:20px;
+}
+
+#showcase #landing input[type = "submit"]{
+	background: transparent;
+	border: 3px solid #fff;
+	padding: 10px;
+	color: #fff;
+	width: 20px;
+
+}
+
+#showcase #landing #spotify-link{
+	border: 3px solid #fff;
+	border-radius: 40px;
+	padding: 15px;
+	text-decoration: none;
+	background: transparent;
+	color: #eee;
+}
+
+#showcase #landing #spotify-link:hover{
+	border: none;
+	text-decoration: underline;
+	background-color: #1ed760;
+	color: #eee;
+}
+
+/* 
+	TODO: 
+		-make animations on #showcase #about
+ */
+
+#showcase #about{
+	position: relative;
+	top: 50%;
+	width: 100%;
+	padding:250px 0 35% 0;
+	font-size: 28px;
+	background: url("../img/bg-2.jpeg");
+	background-repeat: no-repeat;
+	background-attachment:fixed;
+	opacity: 0.75;
+	line-height: 1.4em;
+}
+
+#showcase #about #spotify-link{
+	border-radius: 40px;
+	padding: 15px;
+	text-decoration: none;
+	background: transparent;
+	color: #eee;
+}
+
+#showcase #about #spotify-link:hover{
+	text-decoration: underline;
+	background-color: #1ed760;
+	color: #eee;
 }
 
 footer{

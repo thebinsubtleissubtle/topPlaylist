@@ -22,21 +22,17 @@ SCOPE = "user-top-read"
 CACHE = ".spotifyoauthcache"
 CLIENT_CREDENTIALS = SpotifyClientCredentials(client_id = CLIENT_ID, client_secret = CLIENT_SECRET)
 SP_OAUTH2 = oauth2.SpotifyOAuth(client_id = CLIENT_ID, client_secret = CLIENT_SECRET, redirect_uri = "http://localhost:8000/verified", scope = SCOPE, cache_path = CACHE)
+spotify = spotipy.Spotify(client_credentials_manager = CLIENT_CREDENTIALS)
 TEMPLATE_PATH.insert(0, "")
 
 def get_token():
-	logging.debug("Running get_token()")
 	access_token = ""
 	token_info = SP_OAUTH2.get_cached_token()
-	logging.debug("token_info = {}".format(type(token_info)))
 	if token_info:
-		logging.debug("Found token info!")
 		access_token = token_info["access_token"]
 	else:
 		url = request.url
-		logging.debug("url = {}".format(url))
 		code = SP_OAUTH2.parse_response_code(url)
-		logging.debug("code = {}".format(code))
 		if code:
 			print("Found Spotify auth code in Request URL! "
 				"Trying to get valid access token...")
@@ -51,7 +47,6 @@ def getSPOauthURI():
     return auth_url
 
 
-logging.debug("Start host.")
 
 # Static Routes
 @app.route("/static/css/<filepath:re:.*\.css>")
@@ -62,7 +57,7 @@ def css(filepath):
 def font(filepath):
     return static_file(filepath, root="static/font")
 
-@app.route("/static/img/<filepath:re:.*\.(jpg|png|gif|ico|svg)>")
+@app.route("/static/img/<filepath:re:.*\.(jpg|jpeg|png|gif|ico|svg)>")
 def img(filepath):
     return static_file(filepath, root="static/img")
 
@@ -76,11 +71,19 @@ def js(filepath):
 def root():
 	if os.path.exists(CACHE):
 		os.unlink(CACHE)
-	if get_token():
-		redirect("/verified")
-	else:
-		htmlLoginButton = getSPOauthURI()
-		return template("index.html", year = datetime.datetime.now().year, link = htmlLoginButton)
+	htmlLoginButton = getSPOauthURI()
+	return template("index.html", year = datetime.datetime.now().year, link = htmlLoginButton, search = "")
+
+@app.route("/", method = "POST")
+def get_results():
+	redirect("/search/" + request.forms.get("search"))
+	search(request.forms.get("search"))
+
+@app.route("/search/<keyword>")
+def search(keyword):
+	logging.debug("Running search({})".format(keyword))
+	result = spotify.search(q = keyword, limit = 10)
+	return template("search.html", result = result, year = datetime.datetime.now().year)
 
 @app.route("/verified")
 def verify():
@@ -100,6 +103,10 @@ def get_most_played():
 	long_term_artists = spotify.current_user_top_artists(time_range = "long_term", limit = 100)["items"]
 	long_term_tracks = spotify.current_user_top_tracks(time_range = "long_term", limit = 50)["items"]
 	return template("most_played.html", spotify = spotify, short_term_artists = short_term_artists, short_term_tracks = short_term_tracks, medium_term_artists = medium_term_artists, medium_term_tracks = medium_term_tracks, long_term_artists = long_term_artists, long_term_tracks = long_term_tracks, year = datetime.datetime.now().year)
+
+"""
+	TODO: make playlist based on filter values and data shown.
+"""
 
 # error pages
 @app.error(404)

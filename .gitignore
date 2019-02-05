@@ -3,3 +3,7 @@ topPlaylist/
 
 # Ignore caches
 .spotifyoauthcache
+
+credits.txt
+
+static/img/

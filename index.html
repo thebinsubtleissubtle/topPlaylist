@@ -12,25 +12,31 @@
 		<h1>TopPlaylist</h1>
 		<nav class="nav">
 			<ul class="nav-list">
-				<li><a href="#">About</a></li>
-				<li><a href="#">Github</a></li>
-				<li><a href="{{link}}">Log in using Spotify</a></li>
+				<li><a href="#about">About</a></li>
+				<li><a href="https://www.github.com/thebinsubtleissubtle/topPlaylist">Github</a></li>
 			</ul>
 		</nav>
 	</header>
 	<section id="showcase">
-		<div class="container">
-			<form action="">
-				<input type="text" name="search" id="search-area" placeholder = "Search here...">
-				<input type="submit" value="Search">
-			</form>
+		<div id="landing">
+			<div class="container">
+				<div id="landing-text">
+					<form action="/" method = "post">
+						<input type="text" name="search" id="search-area" placeholder = "Search here...">
+						<input type="submit" value="S">
+					</form>
+					<a href="{{link}}" type = "button" id = "spotify-link">Login Using Spotify</a>
+				</div>
+			</div>
 		</div>
 		<div id="about">
-			<p>
-				TopPlaylist is an open-source platform to track the user's most played tracks and albums, (coming soon) then puts all of them into one playlist.
-			</p>
-			<h1>You don't have to wait every year for wrapped anymore!</h1>
-
+			<div class="container">
+				<p>
+					TopPlaylist is an open-source platform to track the user's most played tracks and albums, (coming soon) then puts all of them into one playlist.
+				</p>
+				<h1>You don't have to wait every year for wrapped anymore!</h1>
+				<a href="{{link}}" type = "button" id = "spotify-link">Login Using Spotify</a>
+			</div>
 		</div>
 	</section>
 	<footer>
