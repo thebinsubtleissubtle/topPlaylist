@@ -3,11 +3,13 @@
 <head>
 	<meta charset="UTF-8">
 	<title>TopPlaylist | Search</title>
-	<link rel="stylesheet" href="../static/css/style.css">
+	<link rel="stylesheet" href="../../static/css/style.css">
 </head>
 <body>
 	<header id="main-header">
-		<h1>TopPlaylist</h1>
+		<a href="/" id = "home">
+			<h1>TopPlaylist</h1>
+		</a>
 		<nav class="nav">
 			<ul class="nav-list">
 				<li><a href="/#about">About</a></li>
@@ -16,14 +18,46 @@
 		</nav>
 	</header>
 	<section id="showcase">
-		<!--  
-			TODO: 
-				- Organize results.
-				- Inspired by duckduckgo.com  
-		-->
-		{{result}}
+		<form action="/" method = "post">
+			<input type="text" name="search" id="search-area" placeholder = "Search here..." value = "{{keyword}}">
+			<select name="type" id="type">
+				<option value="album">Albums</option>
+				<option value="artist">Artists</option>
+				<option value="track">Tracks</option>
+			</select>
+			<input type="submit" value="Search">
+		</form>
+		<div class="results">
+			{{result}}
+			%if type == "track":
+				%for item in result["tracks"]["items"]:
+					%if len(item["album"]["images"]) > 0:
+						<img src="{{item['album']['images'][0]['url']}}" alt="{{item['album']['name']}}" width = "100" height = "100">
+					%else:
+						<img src="../../img/person-placeholder.jpg" alt="{{item['album']['name']}}" width = "100" height = "100">
+					%end
+					<a href="{{item['href']}}">{{item["name"]}}</a>
+					<ul>
+						%for artist in item["artists"]:
+							<li>{{artist["name"]}}</li>
+						%end
+					</ul>
+				%end
+			<!-- TODO: albums and artists types -->
+			%else:
+				<h1>This section is under construction.</h1>
+				<p></p>
+			%end
+		</div>
+
+			
+
+		<!-- TODO: pagination -->
+		<a href="{{result[type + 's']['href']}}">Previous</a>
+		<a href="/next">Next</a>
 	</section>
 	<footer>
+		<p>Icons made by <a href="http://bylucyg.com/" title="Lucy G">Lucy G</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
 		<p>
 			&copy; {{year}} RC Pery.
 		</p>
