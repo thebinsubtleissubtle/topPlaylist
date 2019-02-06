@@ -18,11 +18,11 @@ app = Bottle()
 logging.basicConfig(level = logging.DEBUG, format = "%(asctime)s - %(levelname)s - %(message)s")
 CLIENT_ID     = "e29426dfb22c41cdbc92122fbb9c398c"
 CLIENT_SECRET = "837fd2824bec47e5a003419165674bdd"
-SCOPE = "user-top-read"
+SCOPE = "user-top-read user-read-recently-played playlist-modify-public playlist-modify-private"
 CACHE = ".spotifyoauthcache"
 CLIENT_CREDENTIALS = SpotifyClientCredentials(client_id = CLIENT_ID, client_secret = CLIENT_SECRET)
 SP_OAUTH2 = oauth2.SpotifyOAuth(client_id = CLIENT_ID, client_secret = CLIENT_SECRET, redirect_uri = "http://localhost:8000/verified", scope = SCOPE, cache_path = CACHE)
-spotify = spotipy.Spotify(client_credentials_manager = CLIENT_CREDENTIALS)
+
 TEMPLATE_PATH.insert(0, "")
 
 def get_token():
@@ -39,14 +39,16 @@ def get_token():
 			token_info = SP_OAUTH2.get_access_token(code)
 			access_token = token_info["access_token"]
 
-	logging.debug("access_token = {}".format(access_token))
 	return access_token
 
 def getSPOauthURI():
     auth_url = SP_OAUTH2.get_authorize_url()
     return auth_url
 
-
+if get_token(): # if logged in to spotify
+	spotify = spotipy.Spotify(auth = get_token())
+else: # if not
+	spotify = spotipy.Spotify(client_credentials_manager = CLIENT_CREDENTIALS)
 
 # Static Routes
 @app.route("/static/css/<filepath:re:.*\.css>")
@@ -75,15 +77,19 @@ def root():
 	return template("index.html", year = datetime.datetime.now().year, link = htmlLoginButton, search = "")
 
 @app.route("/", method = "POST")
+@app.route("/search/<keyword>/<type>", method = "POST")
 def get_results():
-	redirect("/search/" + request.forms.get("search"))
-	search(request.forms.get("search"))
+	redirect("/search/" + request.forms.get("search") + "/" + request.forms.get("type"))
+	search(request.forms.get("search"), request.forms.get("type"))
 
-@app.route("/search/<keyword>")
-def search(keyword):
-	logging.debug("Running search({})".format(keyword))
-	result = spotify.search(q = keyword, limit = 10)
-	return template("search.html", result = result, year = datetime.datetime.now().year)
+@app.route("/search/<keyword>/<type>")
+def search(keyword, type):
+	result = spotify.search(q = keyword, limit = 50, type = type)
+	return template("search.html", keyword = keyword, result = result, year = datetime.datetime.now().year, type = type)
+
+@app.route("/search/<keyword>/<type>/next")
+def next():
+	return "<h1>This page is under construction</h1>"
 
 @app.route("/verified")
 def verify():
@@ -106,6 +112,7 @@ def get_most_played():
 
 """
 	TODO: make playlist based on filter values and data shown.
+	TODO: make function that handles pagination.
 """
 
 # error pages
