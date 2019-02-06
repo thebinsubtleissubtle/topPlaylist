@@ -9,7 +9,9 @@
 </head>
 <body>
 	<header id="main-header">
-		<h1>TopPlaylist</h1>
+		<a href="/" id = "home">
+			<h1>TopPlaylist</h1>
+		</a>
 		<nav class="nav">
 			<ul class="nav-list">
 				<li><a href="#about">About</a></li>
@@ -23,7 +25,12 @@
 				<div id="landing-text">
 					<form action="/" method = "post">
 						<input type="text" name="search" id="search-area" placeholder = "Search here...">
-						<input type="submit" value="S">
+						<select name="type" id="type">
+							<option value="album">Albums</option>
+							<option value="artist">Artists</option>
+							<option value="track">Tracks</option>
+						</select>
+						<input type="submit" value="Search">
 					</form>
 					<a href="{{link}}" type = "button" id = "spotify-link">Login Using Spotify</a>
 				</div>
@@ -31,15 +38,21 @@
 		</div>
 		<div id="about">
 			<div class="container">
-				<p>
-					TopPlaylist is an open-source platform to track the user's most played tracks and albums, (coming soon) then puts all of them into one playlist.
-				</p>
-				<h1>You don't have to wait every year for wrapped anymore!</h1>
-				<a href="{{link}}" type = "button" id = "spotify-link">Login Using Spotify</a>
+				<div id="about-text">
+					<p>
+						TopPlaylist is an open-source platform to track the user's most played tracks and albums.
+					</p>
+					<p class = "small-text">
+						It also creates playlist for recommendations based on their music tastes based on their previously played tracks and artists. 
+					</p>
+					<h1>You don't have to wait every year for wrapped anymore!</h1>
+					<a href="{{link}}" type = "button" id = "spotify-link">Login Using Spotify</a>
+				</div>
 			</div>
 		</div>
 	</section>
 	<footer>
+		<p>Icons made by <a href="http://bylucyg.com/" title="Lucy G">Lucy G</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
 		<p>&copy; {{year}} RC Pery.</p>
 	</footer>
 	<script src = "static/js/main.js"></script>
