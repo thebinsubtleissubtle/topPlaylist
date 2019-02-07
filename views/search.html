@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>TopPlaylist | Search</title>
-	<link rel="stylesheet" href="../../static/css/style.css">
+	<link rel="stylesheet" href="../../../static/css/style.css">
 </head>
 <body>
 	<header id="main-header">
@@ -27,34 +27,59 @@
 			</select>
 			<input type="submit" value="Search">
 		</form>
-		<div class="results">
-			{{result}}
-			%if type == "track":
-				%for item in result["tracks"]["items"]:
-					%if len(item["album"]["images"]) > 0:
-						<img src="{{item['album']['images'][0]['url']}}" alt="{{item['album']['name']}}" width = "100" height = "100">
-					%else:
-						<img src="../../img/person-placeholder.jpg" alt="{{item['album']['name']}}" width = "100" height = "100">
-					%end
-					<a href="{{item['href']}}">{{item["name"]}}</a>
-					<ul>
-						%for artist in item["artists"]:
-							<li>{{artist["name"]}}</li>
+		<div class="results-wrapper">
+			<div class="container">
+				<!-- {{result}} -->
+				%if type == "track":
+					<div class="track-results">
+						%for item in result["tracks"]["items"]:
+							%if len(item["album"]["images"]) > 0:
+								<img src="{{item['album']['images'][0]['url']}}" alt="{{item['album']['name']}}" width = "100" height = "100">
+							%else:
+								<img src="../../img/track.jpeg" alt="{{item['album']['name']}}" width = "100" height = "100">
+							%end
+							<a href="{{item['external_urls']['spotify']}}" target = "_blank">{{item["name"]}}</a>
+							<p>
+								
+							</p>
+							<ul>
+								%for artist in item["artists"]:
+									<li>{{artist["name"]}}</li>
+								%end
+							</ul>
 						%end
-					</ul>
+					</div>
+				<!-- TODO: albums and artists types -->
+				%elif type == "album":
+					<div class="album-results">
+						%for item in result["albums"]["items"]:
+							%if len(item["images"]) > 0:
+								<img src="{{item['images'][0]['url']}}" alt="{{item['name']}}" width = "100" height = "100">
+							%else:
+								<img src="../../img/album.jpeg" alt="{{item['name']}}" width = "100" height = "100">
+							%end
+							<a href="{{item['external_urls']['spotify']}}" target = "_blank">{{item['name']}}</a>
+							<ul>
+								%for artist in item["artists"]:
+									<li>{{artist["name"]}}</li>
+								%end
+							</ul>
+						%end
+					</div>
+				%elif type == "artist":
+					<div class="artist-results">
+						{{result}}
+					</div>
 				%end
-			<!-- TODO: albums and artists types -->
-			%else:
-				<h1>This section is under construction.</h1>
-				<p></p>
-			%end
+			</div>
 		</div>
 
 			
 
 		<!-- TODO: pagination -->
-		<a href="{{result[type + 's']['href']}}">Previous</a>
-		<a href="/next">Next</a>
+		<!-- TODO: make prev link disabled when offset reaches zero -->
+		<a id = "prev" href="../../../search/{{keyword}}/{{type}}/{{prev_offset}}">Previous</a>
+		<a id = "total" href="../../../search/{{keyword}}/{{type}}/{{next_offset}}">Next</a>
 	</section>
 	<footer>
 		<p>Icons made by <a href="http://bylucyg.com/" title="Lucy G">Lucy G</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
