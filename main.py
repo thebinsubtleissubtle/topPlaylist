@@ -22,8 +22,12 @@ SCOPE = "user-top-read user-read-recently-played playlist-modify-public playlist
 CACHE = ".spotifyoauthcache"
 CLIENT_CREDENTIALS = SpotifyClientCredentials(client_id = CLIENT_ID, client_secret = CLIENT_SECRET)
 SP_OAUTH2 = oauth2.SpotifyOAuth(client_id = CLIENT_ID, client_secret = CLIENT_SECRET, redirect_uri = "http://localhost:8000/verified", scope = SCOPE, cache_path = CACHE)
+LIMIT = 50
+OFFSET = 0
 
 TEMPLATE_PATH.insert(0, "")
+
+# global functions
 
 def get_token():
 	access_token = ""
@@ -45,25 +49,38 @@ def getSPOauthURI():
     auth_url = SP_OAUTH2.get_authorize_url()
     return auth_url
 
-if get_token(): # if logged in to spotify
-	spotify = spotipy.Spotify(auth = get_token())
-else: # if not
-	spotify = spotipy.Spotify(client_credentials_manager = CLIENT_CREDENTIALS)
 
+def has_token():
+	if get_token(): # if logged in to spotify
+		spotify = spotipy.Spotify(auth = get_token(), client_credentials_manager = CLIENT_CREDENTIALS)
+	else: # if not
+		spotify = spotipy.Spotify(client_credentials_manager = CLIENT_CREDENTIALS)
+	return spotify
+
+def get_offset(offset, limit, mode):
+	if mode == "next":
+		return offset + limit
+	return offset - limit
+
+spotify = has_token()
 # Static Routes
 @app.route("/static/css/<filepath:re:.*\.css>")
+@app.route("/static/css/<filepath:re:.*\.css>/")
 def css(filepath):
     return static_file(filepath, root="static/css")
 
 @app.route("/static/font/<filepath:re:.*\.(eot|otf|svg|ttf|woff|woff2?)>")
+@app.route("/static/font/<filepath:re:.*\.(eot|otf|svg|ttf|woff|woff2?)>/")
 def font(filepath):
     return static_file(filepath, root="static/font")
 
 @app.route("/static/img/<filepath:re:.*\.(jpg|jpeg|png|gif|ico|svg)>")
+@app.route("/static/img/<filepath:re:.*\.(jpg|jpeg|png|gif|ico|svg)>/")
 def img(filepath):
     return static_file(filepath, root="static/img")
 
 @app.route("/static/js/<filepath:re:.*\.js>")
+@app.route("/static/js/<filepath:re:.*\.js>/")
 def js(filepath):
     return static_file(filepath, root="static/js")
 
@@ -71,25 +88,28 @@ def js(filepath):
 
 @app.route("/")
 def root():
-	if os.path.exists(CACHE):
-		os.unlink(CACHE)
 	htmlLoginButton = getSPOauthURI()
-	return template("index.html", year = datetime.datetime.now().year, link = htmlLoginButton, search = "")
+	return template("index.html", year = datetime.datetime.now().year, link = htmlLoginButton)
 
 @app.route("/", method = "POST")
 @app.route("/search/<keyword>/<type>", method = "POST")
+@app.route("/search/<keyword>/<type>/", method = "POST")
 def get_results():
 	redirect("/search/" + request.forms.get("search") + "/" + request.forms.get("type"))
 	search(request.forms.get("search"), request.forms.get("type"))
 
 @app.route("/search/<keyword>/<type>")
+@app.route("/search/<keyword>/<type>/")
 def search(keyword, type):
-	result = spotify.search(q = keyword, limit = 50, type = type)
-	return template("search.html", keyword = keyword, result = result, year = datetime.datetime.now().year, type = type)
+	result = spotify.search(q = keyword, limit = LIMIT, offset = OFFSET, type = type)
+	return template("search.html", keyword = keyword, result = result, year = datetime.datetime.now().year, type = type, prev_offset = get_offset(offset = OFFSET, limit = LIMIT, mode = "prev"), next_offset = get_offset(offset = OFFSET, limit = LIMIT, mode = "next"))
 
-@app.route("/search/<keyword>/<type>/next")
-def next():
-	return "<h1>This page is under construction</h1>"
+
+@app.route("/search/<keyword>/<type>/<curr_offset:int>")
+@app.route("/search/<keyword>/<type>/<curr_offset:int>/")
+def page(keyword, type, curr_offset):
+	result = spotify.search(q = keyword, limit = LIMIT, offset = curr_offset, type = type)
+	return template("search.html", keyword = keyword, result = result, year = datetime.datetime.now().year, type = type, prev_offset = get_offset(offset = curr_offset, limit = LIMIT, mode = "prev"), next_offset = get_offset(offset = curr_offset, limit = LIMIT, mode = "next"))
 
 @app.route("/verified")
 def verify():
@@ -97,6 +117,7 @@ def verify():
 		redirect("/most_played")
 
 @app.route("/most_played")
+@app.route("/most_played/")
 def get_most_played():
 	spotify = spotipy.Spotify(auth = get_token())
 	spotify.trace = False

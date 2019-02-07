@@ -150,9 +150,8 @@ body{
 }
 
 #showcase #about #about-text{
-	border: 3px solid black;
 	padding: 20px;
-	background: #aaa;
+	background: #eee;
 }
 
 #showcase #about .small-text{
@@ -173,10 +172,11 @@ body{
 	background-color: #1ed760;
 }
 
-#showcase .results{
-	border: 2px solid black;
+#showcase .results-wrapper{
 	text-align:center;
 }
+
+#showcase
 
 /* 
 	TODO:
